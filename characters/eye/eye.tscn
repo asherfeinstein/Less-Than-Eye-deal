@@ -1,0 +1,136 @@
+[gd_scene load_steps=14 format=3 uid="uid://pxljrbmttsp3"]
+
+[ext_resource type="Script" uid="uid://s6ea2a10hdk2" path="res://characters/eye/eye.gd" id="1_vsdkh"]
+[ext_resource type="Texture2D" uid="uid://cw1u3ndxgqboi" path="res://characters/eye/shadow (1).png" id="2_0bg8w"]
+[ext_resource type="Texture2D" uid="uid://jdopqj3uealg" path="res://characters/eye/redeye (1).png" id="2_4co01"]
+[ext_resource type="Script" uid="uid://2qta8r56tqf5" path="res://characters/eye/player_animation_tree.gd" id="3_23gsf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vsdkh"]
+radius = 21.095
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_23gsf"]
+atlas = ExtResource("2_4co01")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0bg8w"]
+atlas = ExtResource("2_4co01")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_etker"]
+atlas = ExtResource("2_4co01")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pg4ru"]
+atlas = ExtResource("2_4co01")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_m4fp2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23gsf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0bg8w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_etker")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pg4ru")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_nnod5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EyeFrameStorage:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EyeFrameStorage:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_j1fmd"]
+resource_name = "bounce"
+length = 0.95
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EyeFrameStorage:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.35, 0.65, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 3, 0, 3, 1, 0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EyeFrameStorage:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -10), Vector2(0, -18), Vector2(0, -26), Vector2(0, -30), Vector2(0, -34), Vector2(0, -37), Vector2(0, -39), Vector2(0, -40), Vector2(0, -41), Vector2(0, -40), Vector2(0, -39), Vector2(0, -37), Vector2(0, -34), Vector2(0, -30), Vector2(0, -26), Vector2(0, -18), Vector2(0, -10), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ofhus"]
+_data = {
+&"RESET": SubResource("Animation_nnod5"),
+&"bounce": SubResource("Animation_j1fmd")
+}
+
+[node name="Eye" type="CharacterBody2D"]
+script = ExtResource("1_vsdkh")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(1.69407e-21, 15)
+scale = Vector2(5, 5)
+texture = ExtResource("2_0bg8w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vsdkh")
+
+[node name="EyeFrameStorage" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_m4fp2")
+
+[node name="PlayerAnimation" type="Node2D" parent="."]
+script = ExtResource("3_23gsf")
+
+[node name="EyeAnimationPlayer" type="AnimationPlayer" parent="PlayerAnimation"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_ofhus")
+}
+
+[connection signal="pauseAnimation" from="." to="PlayerAnimation" method="_on_eye_pause_animation"]
+[connection signal="animation_finished" from="PlayerAnimation/EyeAnimationPlayer" to="PlayerAnimation" method="_on_eye_animation_player_animation_finished"]

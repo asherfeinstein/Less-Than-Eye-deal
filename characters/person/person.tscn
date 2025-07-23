@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=3 uid="uid://bwe2moq8w4jrg"]
+
+[ext_resource type="Texture2D" uid="uid://co44n68bvlfky" path="res://characters/person/guy_Idle_labcoat.png" id="1_ib8t8"]
+[ext_resource type="Script" uid="uid://d2xwhcgmcq4jm" path="res://characters/person/person.gd" id="1_yyuma"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yyuma"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6bemo"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_16ubc"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hf03k"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7rijo"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_un1tx"]
+atlas = ExtResource("1_ib8t8")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0epnb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yyuma")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6bemo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_16ubc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hf03k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7rijo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_un1tx")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ib8t8"]
+radius = 3.6
+height = 10.8
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yyuma"]
+height = 32.8
+
+[node name="person" type="CharacterBody2D"]
+scale = Vector2(5, 5)
+collision_layer = 2
+script = ExtResource("1_yyuma")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_0epnb")
+frame = 5
+frame_progress = 0.971016
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.4, 12.8)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ib8t8")
+
+[node name="EyeDetectionRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EyeDetectionRange"]
+position = Vector2(-0.6, 1)
+shape = SubResource("CapsuleShape2D_yyuma")
+
+[connection signal="body_entered" from="EyeDetectionRange" to="." method="_on_eye_detection_range_body_entered"]
+[connection signal="body_exited" from="EyeDetectionRange" to="." method="_on_eye_detection_range_body_exited"]

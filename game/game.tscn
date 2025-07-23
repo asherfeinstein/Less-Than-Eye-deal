@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cs4ytlgrrgoo4"]
+
+[ext_resource type="Script" uid="uid://drxsipgqojb3i" path="res://game/game.gd" id="1_h7iqs"]
+[ext_resource type="PackedScene" uid="uid://pxljrbmttsp3" path="res://characters/eye/eye.tscn" id="2_4fuuu"]
+
+[node name="game" type="Node2D"]
+script = ExtResource("1_h7iqs")
+
+[node name="eye" parent="." instance=ExtResource("2_4fuuu")]
+
+[connection signal="currentlyInDash" from="eye" to="." method="_on_eye_currently_in_dash"]

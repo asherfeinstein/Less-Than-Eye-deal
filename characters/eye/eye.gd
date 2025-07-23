@@ -2,18 +2,21 @@ extends CharacterBody2D
 
 #signals
 signal pauseAnimation
+#signal for telling game scene if eye is currently dashing
+signal currentlyInDash
 #Variables assosiated with movement
 const SPEED = 100
 
-#setup variables
-var gameMode: String = "eye"
+#setup variables go here
+var gameMode
 
 #relating to dash
 var mouseDirection = Vector2(0,0)
 var dashMomentum = 0
-var currentDash: bool = false
+var currentDash:bool = false
 
 func _physics_process(delta: float) -> void:
+	gameMode = get_parent().gameMode
 	#handles various "eye" gamemodes
 	if gameMode == "eye":
 		#basic Eye movement W,A,S,D space to capture
@@ -52,10 +55,13 @@ func _physics_process(delta: float) -> void:
 			if dashMomentum <= 300 and $PlayerAnimation/EyeAnimationPlayer.get_speed_scale() == 0:
 				pauseAnimation.emit(true)
 			if dashMomentum <= 100:
+				#what happens at end of dash
+				currentlyInDash.emit(false)
 				currentDash = false
 				dashMomentum = 0
 		if Input.is_action_just_pressed("capture") and not currentDash:
 			#triggers Dash
+			currentlyInDash.emit(true)
 			mouseDirection = global_position.direction_to(get_global_mouse_position())
 			currentDash = true
 			pauseAnimation.emit(false)
